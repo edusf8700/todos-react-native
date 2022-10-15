@@ -9,15 +9,15 @@ export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   function handleAddTask(newTaskTitle: string) {
-    const newTasks = tasks.map(task => ({...task}));
+    const newTasks = tasks.map(task => ({ ...task }));
 
-    /* const findTask = tasks.find(task => task.title === newTaskTitle);
+    const findTask = tasks.find(task => task.title === newTaskTitle);
 
-    if(findTask) {
+    if (findTask) {
       return Alert.alert(
         'Task já cadastrada.',
         'Você não pode cadastrar uma task com o mesmo nome.')
-    }; */
+    };
 
     newTasks.push({
       id: new Date().getTime(),
@@ -29,17 +29,30 @@ export function Home() {
   }
 
   function handleToggleTaskDone(id: number) {
-    const newTasks = tasks.map(task => ({...task}));
+    const newTasks = tasks.map(task => ({ ...task }));
     const taskDone = newTasks.find(task => task.id === id);
-    if(taskDone) taskDone.done = !taskDone.done;
+    if (taskDone) taskDone.done = !taskDone.done;
     setTasks(newTasks);
-    
+
   }
 
   function handleRemoveTask(id: number) {
-    const newTasks = tasks.map(task => ({...task}));
-    const taskRemove = newTasks.filter(task => task.id !== id);
-    setTasks(taskRemove);
+
+    return Alert.alert('Remover item', 'Tem certeza que você deseja remover esse item?', [
+      {
+        text: 'Não',
+        style: 'cancel',
+      },
+      {
+        text: 'Sim',
+        style: 'destructive',
+        onPress: () => {
+          const newTasks = tasks.map(task => ({ ...task }));
+          const taskRemove = newTasks.filter(task => task.id !== id);
+          setTasks(taskRemove);
+        }
+      }
+    ])
   }
 
   return (
@@ -48,10 +61,10 @@ export function Home() {
 
       <TodoInput addTask={handleAddTask} />
 
-      <TasksList 
-        tasks={tasks} 
+      <TasksList
+        tasks={tasks}
         toggleTaskDone={handleToggleTaskDone}
-        removeTask={handleRemoveTask} 
+        removeTask={handleRemoveTask}
       />
     </View>
   )
